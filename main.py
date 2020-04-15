@@ -33,7 +33,7 @@ printer      = Adafruit_Thermal("/dev/serial0", 19200, timeout=5)
 # Called when button is briefly tapped.  Invokes time/temperature script.
 def tap():
   GPIO.output(ledPin, GPIO.HIGH)  # LED on while working
-  subprocess.call(["python", "timetemp.py"])
+  subprocess.call(["python", "niceties.py"])
   GPIO.output(ledPin, GPIO.LOW)
 
 
@@ -87,7 +87,7 @@ try:
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	s.connect(('8.8.8.8', 0))
 	printer.print('My IP address is ' + s.getsockname()[0])
-	printer.feed(3)
+	printer.feed(5)
 except:
 	printer.boldOn()
 	printer.println('Network is unreachable.')
@@ -98,8 +98,8 @@ except:
 	exit(0)
 
 # Print greeting image
-printer.printImage(Image.open('gfx/hello.png'), True)
-printer.feed(3)
+#printer.printImage(Image.open('gfx/hello.png'), True)
+#printer.feed(3)
 GPIO.output(ledPin, GPIO.LOW)
 
 # Poll initial button state and time
@@ -148,20 +148,20 @@ while(True):
 
   # Once per day (currently set for 6:30am local time, or when script
   # is first run, if after 6:30am), run forecast and sudoku scripts.
-  l = time.localtime()
-  if (60 * l.tm_hour + l.tm_min) > (60 * 6 + 30):
-    if dailyFlag == False:
-      daily()
-      dailyFlag = True
-  else:
-    dailyFlag = False  # Reset daily trigger
+#  l = time.localtime()
+#  if (60 * l.tm_hour + l.tm_min) > (60 * 6 + 30):
+#    if dailyFlag == False:
+#      daily()
+#      dailyFlag = True
+#  else:
+#    dailyFlag = False  # Reset daily trigger
 
   # Every 30 seconds, run Twitter scripts.  'lastId' is passed around
   # to preserve state between invocations.  Probably simpler to do an
   # import thing.
-  if t > nextInterval:
-    nextInterval = t + 30.0
-    result = interval()
-    if result is not None:
-      lastId = result.rstrip('\r\n')
+#  if t > nextInterval:
+#    nextInterval = t + 30.0
+#    result = interval()
+#    if result is not None:
+#      lastId = result.rstrip('\r\n')
 
