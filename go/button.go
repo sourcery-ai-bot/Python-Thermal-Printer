@@ -48,10 +48,15 @@ func (s *buttonState) next(l gpio.Level, t time.Time) *Event {
 		s.update = false
 		switch s.l {
 		case gpio.Low:
-			return ButtonPressed(s.t)
+			return ButtonPressedEvent(s.t)
 		case gpio.High:
-			return ButtonReleased(s.t)
+			return ButtonReleasedEvent(s.t)
 		}
+	}
+
+	if s.l == gpio.High && t.Sub(s.t) > 2*time.Second {
+		s.t = t
+		return IdleEvent(s.t)
 	}
 
 	return nil

@@ -40,21 +40,25 @@ func main() {
 
 	// set up our actions/listeners given the context
 	var wg sync.WaitGroup
-	printer.LED.ToggleLoop(ctx, &wg)
+
+	// this looks for button presses and releases, and will
+	// emit an Idle event if there was no press for 2 seconds.
 	events := printer.Button.PressListener(ctx, &wg)
+
+	ledEvents := make(chan *Event)
+	printer.LED.ToggleLoop(ctx, &wg, ledEvents)
 
 	// this is the event processor
 	go func() {
 		var lastEvent *Event
 		for e := range events {
 			if lastEvent == nil {
-				log.Printf("first! %s", e)
-				lastEvent = e
-				continue
+				log.Printf("%s", e)
+			} else {
+				log.Printf("%s | %s", e, e.DurationSince(lastEvent))
 			}
-
-			log.Printf("Got %s -- %s since last", e, e.DurationSince(lastEvent))
 			lastEvent = e
+			ledEvents <- e
 		}
 	}()
 

@@ -22,25 +22,46 @@ func NewLEDPin() *LEDPin {
 }
 
 func (p *LEDPin) Toggle() error {
-	p.level = !p.level
-	return p.pin.Out(p.level)
+	return p.Out(!p.level)
 }
 
 func (p *LEDPin) Off() error {
-	return p.pin.Out(gpio.Low)
+	return p.Out(gpio.Low)
 }
 
 func (p *LEDPin) On() error {
-	return p.pin.Out(gpio.High)
+	return p.Out(gpio.High)
 }
 
-func (p *LEDPin) ToggleLoop(ctx context.Context, wg *sync.WaitGroup) {
+func (p *LEDPin) Out(l gpio.Level) error {
+	p.level = l
+	return p.pin.Out(l)
+}
+
+func (p *LEDPin) ToggleLoop(ctx context.Context, wg *sync.WaitGroup, events <-chan *Event) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		t := time.NewTicker(500 * time.Millisecond)
+		stopped := false
+		t := ticker()
 		for {
 			select {
+			case e := <-events:
+				// we send a copy of the events here,
+				// and this only handles the press, release, and idle.
+				switch e.Kind {
+				case ButtonPressed:
+					t.Stop()
+					stopped = true
+					_ = p.On()
+				case ButtonReleased:
+					_ = p.Off()
+				case Idle:
+					if stopped {
+						t = ticker()
+						stopped = false
+					}
+				}
 			case <-ctx.Done():
 				if err := p.Off(); err != nil {
 					log.Printf("[Error] %s", err)
@@ -54,4 +75,8 @@ func (p *LEDPin) ToggleLoop(ctx context.Context, wg *sync.WaitGroup) {
 			}
 		}
 	}()
+}
+
+func ticker() *time.Ticker {
+	return time.NewTicker(500 * time.Millisecond)
 }
