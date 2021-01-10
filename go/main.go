@@ -40,7 +40,7 @@ func main() {
 	// signal handler.
 	ctx, cancel := context.WithCancel(context.Background())
 	// this sets up the actual signal handler.
-	termChan := make(chan os.Signal)
+	termChan := make(chan os.Signal, 1)
 	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT)
 	go func() {
 		<-termChan
