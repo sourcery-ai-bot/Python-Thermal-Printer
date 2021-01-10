@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -21,14 +22,18 @@ type LEDPin struct {
 	ticker *ledTickerState
 }
 
-func NewLEDPin(opts LEDOptions) *LEDPin {
+func NewLEDPin(opts LEDOptions) (*LEDPin, error) {
+	pin := gpioreg.ByName(opts.Pin)
+	if pin == nil {
+		return nil, fmt.Errorf("no led pin %s", opts.Pin)
+	}
 	return &LEDPin{
-		pin: gpioreg.ByName(opts.Pin),
+		pin: pin,
 		ticker: &ledTickerState{
 			blinkRate: opts.BlinkRate,
 			stopped:   true,
 		},
-	}
+	}, nil
 }
 
 func (p *LEDPin) Toggle() error {

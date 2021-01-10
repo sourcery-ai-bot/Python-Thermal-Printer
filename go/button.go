@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -19,13 +20,17 @@ type ButtonPin struct {
 	timeout time.Duration
 }
 
-func NewButtonPin(opts ButtonOptions) *ButtonPin {
+func NewButtonPin(opts ButtonOptions) (*ButtonPin, error) {
 	pin := gpioreg.ByName(opts.Pin)
+	if pin == nil {
+		return nil, fmt.Errorf("could not set up button for pin %s", opts.Pin)
+	}
+
 	pin.In(gpio.PullUp, gpio.NoEdge)
 	return &ButtonPin{
 		pin:     pin,
 		timeout: opts.IdleTimeout,
-	}
+	}, nil
 }
 
 type buttonState struct {

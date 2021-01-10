@@ -19,10 +19,18 @@ func NewPrinter(opts PrinterOptions) (*Printer, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Printer{
-		LED:    NewLEDPin(opts.LED),
-		Button: NewButtonPin(opts.Button),
-	}, nil
+
+	led, err := NewLEDPin(opts.LED)
+	if err != nil {
+		return nil, err
+	}
+
+	button, err := NewButtonPin(opts.Button)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Printer{LED: led, Button: button}, nil
 }
 
 func (p *Printer) Shutdown() error {
