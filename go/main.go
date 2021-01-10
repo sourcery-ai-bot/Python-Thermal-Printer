@@ -81,6 +81,7 @@ func main() {
 				log.Printf("%s", e)
 			} else {
 				log.Printf("%s | %s", e, e.DurationSince(lastEvent))
+				printer.MaybePrint(lastEvent, e)
 			}
 			lastEvent = e
 			ledEvents <- e
