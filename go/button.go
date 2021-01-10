@@ -9,15 +9,22 @@ import (
 	"periph.io/x/conn/v3/gpio/gpioreg"
 )
 
-type ButtonPin struct {
-	pin gpio.PinIO
+type ButtonOptions struct {
+	Pin         string
+	IdleTimeout time.Duration
 }
 
-func NewButtonPin() *ButtonPin {
-	pin := gpioreg.ByName(ButtonPinName)
+type ButtonPin struct {
+	pin     gpio.PinIO
+	timeout time.Duration
+}
+
+func NewButtonPin(opts ButtonOptions) *ButtonPin {
+	pin := gpioreg.ByName(opts.Pin)
 	pin.In(gpio.PullUp, gpio.NoEdge)
 	return &ButtonPin{
-		pin: pin,
+		pin:     pin,
+		timeout: opts.IdleTimeout,
 	}
 }
 
@@ -25,6 +32,7 @@ type buttonState struct {
 	l      gpio.Level
 	t      time.Time
 	update bool
+	button *ButtonPin
 }
 
 func (s *buttonState) next(l gpio.Level, t time.Time) *Event {
@@ -54,7 +62,7 @@ func (s *buttonState) next(l gpio.Level, t time.Time) *Event {
 		}
 	}
 
-	if s.l == gpio.High && t.Sub(s.t) > 2*time.Second {
+	if s.l == gpio.High && t.Sub(s.t) > s.button.timeout {
 		s.t = t
 		return IdleEvent(s.t)
 	}
@@ -71,7 +79,7 @@ func (p *ButtonPin) PressListener(ctx context.Context, wg *sync.WaitGroup) <-cha
 		defer wg.Done()
 
 		// initial state
-		s := &buttonState{l: p.pin.Read(), t: time.Now()}
+		s := &buttonState{l: p.pin.Read(), t: time.Now(), button: p}
 
 		// the loop
 		for {

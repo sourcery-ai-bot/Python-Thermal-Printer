@@ -10,17 +10,23 @@ import (
 	"periph.io/x/conn/v3/gpio/gpioreg"
 )
 
+type LEDOptions struct {
+	Pin       string
+	BlinkRate time.Duration
+}
+
 type LEDPin struct {
 	pin    gpio.PinIO
 	level  gpio.Level
 	ticker *ledTickerState
 }
 
-func NewLEDPin() *LEDPin {
+func NewLEDPin(opts LEDOptions) *LEDPin {
 	return &LEDPin{
-		pin: gpioreg.ByName(LEDPinName),
+		pin: gpioreg.ByName(opts.Pin),
 		ticker: &ledTickerState{
-			stopped: true,
+			blinkRate: opts.BlinkRate,
+			stopped:   true,
 		},
 	}
 }
@@ -55,7 +61,8 @@ func (p *LEDPin) Handle(e *Event) error {
 	return nil
 }
 
-func (p *LEDPin) ToggleLoop(ctx context.Context, wg *sync.WaitGroup, events <-chan *Event) {
+func (p *LEDPin) ToggleLoop(ctx context.Context, wg *sync.WaitGroup) chan<- *Event {
+	events := make(chan *Event)
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
@@ -80,17 +87,19 @@ func (p *LEDPin) ToggleLoop(ctx context.Context, wg *sync.WaitGroup, events <-ch
 			}
 		}
 	}()
+	return events
 }
 
 type ledTickerState struct {
-	t       *time.Ticker
-	stopped bool
+	t         *time.Ticker
+	stopped   bool
+	blinkRate time.Duration
 }
 
 func (t *ledTickerState) Start() {
 	if t.stopped {
 		t.stopped = false
-		t.t = time.NewTicker(500 * time.Millisecond)
+		t.t = time.NewTicker(t.blinkRate)
 	}
 }
 
