@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Main script for Adafruit Internet of Things Printer 2.  Monitors button
 # for taps and holds, performs periodic actions (Twitter polling by default)
@@ -14,7 +14,6 @@
 # http://www.adafruit.com/products/597 Mini Thermal Receipt Printer
 # http://www.adafruit.com/products/600 Printer starter pack
 
-from __future__ import print_function
 import RPi.GPIO as GPIO
 import subprocess, time, socket
 from PIL import Image

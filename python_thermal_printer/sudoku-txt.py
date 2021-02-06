@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 # Sudoku Generator and Solver in 250 lines of python
 # Copyright (c) 2006 David Bau.  All rights reserved.
@@ -18,7 +18,6 @@
 # Adapted for Adafruit_Thermal library by Phil Burgess for
 # Adafruit Industries.
 
-from __future__ import print_function
 import sys, os, random, getopt, re
 from Adafruit_Thermal import *
 

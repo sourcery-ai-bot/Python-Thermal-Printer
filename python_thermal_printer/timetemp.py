@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Current time and temperature display for Raspberry Pi w/Adafruit Mini
 # Thermal Printer.  Retrieves data from DarkSky.net's API, prints current
@@ -13,7 +13,6 @@
 # http://www.adafruit.com/products/597 Mini Thermal Receipt Printer
 # http://www.adafruit.com/products/600 Printer starter pack
 
-from __future__ import print_function
 from Adafruit_Thermal import *
 import time, urllib, json
 from PIL import Image, ImageDraw
