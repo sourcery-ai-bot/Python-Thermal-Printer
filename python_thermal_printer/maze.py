@@ -1,6 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
-from __future__ import print_function
 import RPi.GPIO as GPIO
 import subprocess, time, socket
 from PIL import Image

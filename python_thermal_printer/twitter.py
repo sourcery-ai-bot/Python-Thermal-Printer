@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # This is a Python port of Adafruit's "Gutenbird" sketch for Arduino.
 # Polls one or more Twitter accounts for changes, displaying updates
@@ -26,7 +26,6 @@
 # If you put code on Github or other public repository, replace them
 # with dummy strings.
 
-from __future__ import print_function
 import base64, HTMLParser, httplib, json, sys, urllib, zlib
 from unidecode import unidecode
 from Adafruit_Thermal import *

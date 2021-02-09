@@ -7,6 +7,8 @@ authors = ["Robert DeLanghe <bdelanghe@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 pyserial = "^3.4"
+Pillow = "^7.1.1"
+tomlkit = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

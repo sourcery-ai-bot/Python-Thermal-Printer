@@ -1,0 +1,59 @@
+[commands.print]
+    "LF" = "Print and line feed"
+    "HT" = "JMP to the next TAB position"
+    "FF" = "Print the data in the buffer"
+    "ESC FF" = "Print the data in the buffer"
+    "ESC J" = "Print and Feed n dots paper"
+    "ESC d" = "Print and Feed n lines"
+    "ESC =" = "Toggle the printer online or offline"
+
+[commands.line_spacing]
+    "ESC 2" = "Select default line spacing"
+    "ESC 3 n" = "Set line spacing"
+    "ESC a n" = "Select justification"
+    "GS L nL nH" = "Set the left blank margin with dots"
+    "ESC B n" =  "Set the left blank char number"
+
+[commands.character]
+    "ESC ! n" = "Select print mode(s)"
+    "GS ! n" = "Set or Cancle the double width and height"
+    "ESC E n" = "Set or Cancle bold font"
+    "ESC SP" = "Set the space between chars"
+    "ESC SO" = "Turn double width on"
+    "ESC DC4" = "Turn double width off"
+    "ESC { n" = "Turn upside-down printing mode on/off"
+    "GS B n" = "Turn inverting printing mode on/off"
+    "ESC - n" = "Set the underline dots(0,1,2)"
+    "ESC % n" = "Select/Cancel user-defined characters"
+    "ESC &" = "Define user-defined characters"
+    "ESC ?" = "Cancle user-defined characters"
+    "ESC R n" = "Select and international character set"
+    "ESC t n" = "Select character code table"
+
+[commands.bit_image]
+    "ESC *" = "Select bit-image mode"
+    "GS *" = "Define downloaded bit image"
+    "GS /" = "Print downloaded bit image"
+    "DC2 *" = "Print the bitmap"
+    "DC2 V" = "Print MSB bitmap"
+    "DC2 v" = "Print LSB bitmap"
+
+[commands.init]
+    "ESC @" = "Initialize printer"
+
+[commands.status]
+    "ESC v n" = "Transmit paper sensor status"
+    "ESC u n" = "Transmit peripheral device status"
+    "GS a n" = "Enable/Disable AutomaticStatus Back(ASB)"
+
+[commands.bar_code]
+    "GS H" = "Select printing position of human readable characters"
+    "GS h" = "Set bar code height"
+    "GS x" = "Set bar code left position"
+    "GS w" = "Set bar code width"
+    "GS k" = "Print bar code"
+
+[commands.board_para]
+    "ESC 7 n1 n2" = "Set printing para. Heat & break time, max heat dot"
+    "DC2 # n" = "Set printing density."
+    "DC2 T" = "Printing test page"

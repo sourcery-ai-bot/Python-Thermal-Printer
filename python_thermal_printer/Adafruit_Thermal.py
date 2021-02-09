@@ -1,59 +1,59 @@
-#*************************************************************************
-# This is a Python library for the Adafruit Thermal Printer.
-# Pick one up at --> http://www.adafruit.com/products/597
-# These printers use TTL serial to communicate, 2 pins are required.
-# IMPORTANT: On 3.3V systems (e.g. Raspberry Pi), use a 10K resistor on
-# the RX pin (TX on the printer, green wire), or simply leave unconnected.
-#
-# Adafruit invests time and resources providing this open source code.
-# Please support Adafruit and open-source hardware by purchasing products
-# from Adafruit!
-#
-# Written by Limor Fried/Ladyada for Adafruit Industries.
-# Python port by Phil Burgess for Adafruit Industries.
-# MIT license, all text above must be included in any redistribution.
-#*************************************************************************
+"""
+*************************************************************************
+ This is a Python library for the Adafruit Thermal Printer.
+ Pick one up at --> http://www.adafruit.com/products/597
+ These printers use TTL serial to communicate, 2 pins are required.
+ IMPORTANT: On 3.3V systems (e.g. Raspberry Pi), use a 10K resistor on
+ the RX pin (TX on the printer, green wire), or simply leave unconnected.
 
-# This is pretty much a 1:1 direct Python port of the Adafruit_Thermal
-# library for Arduino.  All methods use the same naming conventions as the
-# Arduino library, with only slight changes in parameter behavior where
-# needed.  This should simplify porting existing Adafruit_Thermal-based
-# printer projects to Raspberry Pi, BeagleBone, etc.  See printertest.py
-# for an example.
-#
-# One significant change is the addition of the printImage() function,
-# which ties this to the Python Imaging Library and opens the door to a
-# lot of cool graphical stuff!
-#
-# TO DO:
-# - Might use standard ConfigParser library to put thermal calibration
-#   settings in a global configuration file (rather than in the library).
-# - Make this use proper Python library installation procedure.
-# - Trap errors properly.  Some stuff just falls through right now.
-# - Add docstrings throughout!
+ Adafruit invests time and resources providing this open source code.
+ Please support Adafruit and open-source hardware by purchasing products
+ from Adafruit!
 
-# Python 2.X code using the library usu. needs to include the next line:
-from __future__ import print_function
+ Written by Limor Fried/Ladyada for Adafruit Industries.
+ Python port by Phil Burgess for Adafruit Industries.
+ MIT license, all text above must be included in any redistribution.
+*************************************************************************
+
+ This is pretty much a 1:1 direct Python port of the Adafruit_Thermal
+ library for Arduino.  All methods use the same naming conventions as the
+ Arduino library, with only slight changes in parameter behavior where
+ needed.  This should simplify porting existing Adafruit_Thermal-based
+ printer projects to Raspberry Pi, BeagleBone, etc.  See printertest.py
+ for an example.
+
+ One significant change is the addition of the printImage() function,
+ which ties this to the Python Imaging Library and opens the door to a
+ lot of cool graphical stuff!
+ """
+ 
+ #TODO: Might use standard ConfigParser library to put thermal calibration settings in a global configuration file (rather than in the library).
+ #TODO: Make this use proper Python library installation procedure.
+ #TODO: Trap errors properly.  Some stuff just falls through right now.
+ #TODO: Add docstrings throughout!
+
 from serial import Serial
+from PIL import Image
+import tomlkit
 import time
 import sys
 
 class Adafruit_Thermal(Serial):
 
-	resumeTime      =   0.0
-	byteTime        =   0.0
-	dotPrintTime    =   0.0
-	dotFeedTime     =   0.0
-	prevByte        =  '\n'
-	column          =     0
-	maxColumn       =    32
-	charHeight      =    24
-	lineSpacing     =     8
-	barcodeHeight   =    50
-	printMode       =     0
-	defaultHeatTime =    60
-	firmwareVersion =   268
-	writeToStdout   = False
+	resumeTime      =   0.0 # added to toml
+	byteTime        =   0.0 # added to toml
+	dotPrintTime    =   0.0 # added to toml
+	dotFeedTime     =   0.0 # added to toml
+	prevByte        =  '\n' # added to toml
+	column          =     0 # added to toml
+	maxColumn       =    32 # added to toml
+	charHeight      =    24 # added to toml
+	lineSpacing     =     8 # added to toml
+	barcodeHeight   =    50 # added to toml
+	printMode       =     0 # added to toml
+	defaultHeatTime =    60 # added to toml
+	firmwareVersion =   268 # added to toml
+	writeToStdout   = False # added to toml
 
 	def __init__(self, *args, **kwargs):
 		# NEW BEHAVIOR: if no parameters given, output is written
@@ -550,7 +550,6 @@ class Adafruit_Thermal(Serial):
 	# the Imaging Library to perform such operations before
 	# passing the result to this function.
 	def printImage(self, image, LaaT=False):
-		from PIL import Image
 
 		if image.mode != '1':
 			image = image.convert('1')

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 # Sudoku Generator and Solver in 250 lines of python
 # Copyright (c) 2006 David Bau.  All rights reserved.
@@ -20,7 +20,6 @@
 # to render the puzzle rather than text symbols.  See sudoku-txt
 # for a different Sudoku example that's all text-based.
 
-from __future__ import print_function
 import sys, os, random, getopt, re
 from Adafruit_Thermal import *
 from PIL import Image
